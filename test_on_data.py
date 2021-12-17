@@ -63,18 +63,22 @@ data_winning = df['Winner']
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-# split des données
-def splitDonnees(test_size):
-    X_train, X_test, y_train, y_test = train_test_split(data_numbers, data_winning, test_size=test_size, random_state=0)
-    return [X_train, X_test, y_train, y_test]
+# # split des données
+# def splitDonnees(test_size):
+#     X_train, X_test, y_train, y_test = train_test_split(data_numbers, data_winning, test_size=test_size, random_state=0)
+#     return [X_train, X_test, y_train, y_test]
 
-# Ajout dans variable global des données
+# # Ajout dans variable global des données
+# test_size = 0.2
+# donnee = []
+# donnee = splitDonnees[test_size]
+# X_train = donnee[0]
+# X_test = donnee[1]
+# y_train = donnee[2]
+# y_test = donnee[3]
 test_size = 0.2
-donnee = splitDonnees[test_size]
-X_train = donnee[0]
-X_test = donnee[1]
-y_train = donnee[2]
-y_test = donnee[3]
+X_train, X_test, y_train, y_test = train_test_split(data_numbers, data_winning, test_size=test_size, random_state=0)
+
 
 
 # tirage a prédire
@@ -105,3 +109,11 @@ def randomTree(tirage):
 
     prediction = model.predict(X_test)
     return prediction
+
+pred1 = naiveBaye(tirage)
+pred2 = arbreDecision(tirage)
+pred3 = randomTree(tirage)
+
+print("Prediction naive Bayes : %d"% pred1[0])
+print("Prediction arbre decision : %d"% pred2[0])
+print("Prediction random tree : %d"% pred3[0])
