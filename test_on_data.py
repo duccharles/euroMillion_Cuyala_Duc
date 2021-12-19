@@ -57,7 +57,7 @@ print(df)
 
 # On prend les colonnes du dataframe qui nous intéresse
 data_numbers = df[['N1','N2','N3','N4','N5','E1','E2']]
-data_winning = df['Winner']
+data_winning = df['Winning']
 
 # importation des librairies qui nous intéresse
 from sklearn.model_selection import train_test_split
@@ -117,3 +117,18 @@ pred3 = randomTree(tirage)
 print("Prediction naive Bayes : %d"% pred1[0])
 print("Prediction arbre decision : %d"% pred2[0])
 print("Prediction random tree : %d"% pred3[0])
+
+
+# métrique de performance
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import accuracy_score
+y_pred1 = naiveBaye(X_test)
+tn, fp, fn, tp = confusion_matrix(y_test, y_pred1).ravel()
+
+
+print("true negatif: %d"%tn)
+print("faux positif %d"%fp)
+print("faux negatif: %d"%fn)
+print("true positif: %d"%tp)
+accu_score = accuracy_score(y_test, y_pred1)
+print("accuracy score : %f"% accu_score)
