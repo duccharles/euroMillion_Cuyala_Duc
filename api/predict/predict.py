@@ -28,6 +28,16 @@ class StarNumbers(BaseModel):
     
 
 def check_duplicates(numbers, star_numbers):
+    """
+        Checks for duplicates in the numbers and star_numbers
+        
+        Args:
+            numbers: numbers chosen by the user
+            star_numbers: star number chosen by the user
+            
+        Returns
+            no_duplicates: boolean return value
+    """
     no_duplicates = True
     numbers_duplicates = set(x[1] for x in numbers)
     star_numbers_duplicates = set(x[1] for x in star_numbers)
@@ -36,6 +46,16 @@ def check_duplicates(numbers, star_numbers):
     return (no_duplicates)
 
 def check_numbers_validity(numbers, star_numbers):
+    """
+        Checks the validity of the numbers
+        
+        Args:
+            numbers: numbers chosen by the user
+            star_numbers: star number chosen by the user
+            
+        Returns
+            valid_numbers: boolean return value
+    """
     valid_numbers = True
     for n in numbers:
         if (min_number > n[1] or n[1] > max_number):
@@ -46,6 +66,16 @@ def check_numbers_validity(numbers, star_numbers):
     return (valid_numbers)
 
 def check_choice_validity(chosen_numbers: Numbers, chosen_star_numbers: StarNumbers):
+    """
+        Checks the validity of the choice
+        
+        Args:
+            numbers: numbers chosen by the user
+            star_numbers: star number chosen by the user
+            
+        Returns
+            valid_choice: boolean return value
+    """
     valid_choice = True
     numbers = []
     star_numbers = []
@@ -60,9 +90,17 @@ def check_choice_validity(chosen_numbers: Numbers, chosen_star_numbers: StarNumb
 
 @router.post("/api/predict/")
 async def check_if_winning_numbers(chosen_numbers: Numbers, chosen_star_numbers: StarNumbers):
+    """
+        Checks if the numbers chosen have at least 30'%' chance of winning
+        
+        Args:
+            numbers: numbers chosen by the user
+            star_numbers: star number chosen by the user
+            
+        Returns
+            message: string return value
+    """
     valid_choice = check_choice_validity(chosen_numbers, chosen_star_numbers)
-    print(chosen_numbers)
-    print(chosen_star_numbers)
     if valid_choice:
         chosen_draw = pd.DataFrame(columns=['N1','N2','N3','N4','N5','E1','E2'])
         chosen_draw = chosen_draw.append({"N1":chosen_numbers.number_1,
@@ -73,14 +111,25 @@ async def check_if_winning_numbers(chosen_numbers: Numbers, chosen_star_numbers:
                                           "E1":chosen_star_numbers.star_number_1,
                                           "E2":chosen_star_numbers.star_number_2,},ignore_index=True)  
         model = pickle.load(open("datasource/saved_model.pickle","rb"))
-        test = model[0].predict_proba(chosen_draw)
-        return {"Message": test[0][1]}
+        prediction = model[0].predict_proba(chosen_draw)
+        winning_prob = str(prediction[0][1]*100)+"%"
+        losing_prob = str(prediction[0][0]*100)+"%"
+        return {"Winning probability": winning_prob,
+                "Losing probability": losing_prob}
     else:
         return {"Invalid Numbers"}
     
 
 @router.get("/api/predict/")
 async def get_winning_numbers():
+    """
+        Returns a random draw with at least 30'%' chance of winning
+        
+        Args:
+            
+        Returns
+            message: string return value
+    """
     not_good_enough = True
     while not_good_enough:
         random_draw = pd.DataFrame(columns=['N1','N2','N3','N4','N5','E1','E2'])
@@ -93,7 +142,11 @@ async def get_winning_numbers():
                                           "E1":new_draw[5],
                                           "E2":new_draw[6],},ignore_index=True)
         model = pickle.load(open("datasource/saved_model.pickle","rb"))
-        test = model[0].predict_proba(random_draw)
-        if test[0][1] >= 0.3:
+        prediction = model[0].predict_proba(random_draw)
+        if prediction[0][1] >= 0.3:
             not_good_enough = False
-    return {"message": test[0][1]}
+    winning_prob = str(prediction[0][1]*100)+"%"
+    losing_prob = str(prediction[0][0]*100)+"%"
+    return {"Random draw": str(new_draw),
+            "Winning probability": winning_prob,
+            "Losing probability": losing_prob}

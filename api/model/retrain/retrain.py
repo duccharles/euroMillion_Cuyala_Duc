@@ -23,6 +23,14 @@ random_state = 0
 csv_source = "datasource/EuroMillions_numbers.csv"
 
 def make_new_data():
+    """
+        Creates a randow draw of numbers
+        
+        Args:
+            
+        Returns
+            tab_numbers: array of int return value
+    """
     tab_numbers = []
     for i in range(total_numbers):
         number = random.randint(min_number,max_number)
@@ -53,6 +61,14 @@ def make_new_data():
     return tab_numbers
 
 def init_dataframe():
+    """
+        Initialize the dataframe with the csv file
+        
+        Args:
+            
+        Returns
+            df: dataframe return value
+    """
     df = pd.read_csv(csv_source, sep=";")
     df = df.assign(Winning=True)
     winning_lines = 1318
@@ -74,6 +90,19 @@ def init_dataframe():
     return df
 
 def train_model():
+    """
+        Train the model
+        
+        Args:
+            
+        Returns
+            model: string return value about the model
+            X_train: training draws  
+            X_test: testing draws
+            y_train: training results
+            y_test: testing results
+            performance_metrics: performance_metrics return value
+    """
     draw_values_df = init_dataframe()
     data_numbers = draw_values_df[['N1','N2','N3','N4','N5','E1','E2']]
     data_winning = draw_values_df['Winning']
@@ -88,6 +117,14 @@ def train_model():
     
 @router.post("/api/model/retrain/")
 async def retrain_model():
+    """
+        Retrain the model
+        
+        Args:
+            
+        Returns
+            message: string return value
+    """
     model = train_model()
     pickle.dump(model,open("datasource/saved_model.pickle","wb"))
-    return {"message": "test"}
+    return {"message": "Model has been trained and saved"}
