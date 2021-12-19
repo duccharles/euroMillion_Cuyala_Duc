@@ -21,12 +21,12 @@ Pour installer les librairies python *sklearn* et *pandas* nous avons utilise le
 ## Utilisation
 
 Pour utiliser l'API (après avoir installé les librairies données précedemment): 
-    - ouvrir un terminal dans le dossier racine du projet et lancer la commande "uvicorn api.main:app -- reload"
-    - se rendre sur page web http://127.0.0.1:8000/docs#/
-    - lancer la requête "retrain" afin d'entraîner le modèle
+<br/>   - ouvrir un terminal dans le dossier racine du projet et lancer la commande "uvicorn api.main:app -- reload"
+<br/>   - se rendre sur page web http://127.0.0.1:8000/docs#/
+<br/>   - lancer la requête "retrain" afin d'entraîner le modèle
 
 Pour la requête PUT /api/model/ : la date doit être un string, les autres valeurs des entiers
 
 Pour la requête POST /api/predict/ : 
-    - les valeurs doivent être entre 1 et 50 pour les nombres classiques (sans doublon)
-    - les valeurs doivent être entre 1 et 12 pour les nombres étoiles (sans doublon)
+<br/>   - les valeurs doivent être entre 1 et 50 pour les nombres classiques (sans doublon)
+<br/>   - les valeurs doivent être entre 1 et 12 pour les nombres étoiles (sans doublon)
