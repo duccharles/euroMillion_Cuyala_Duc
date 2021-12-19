@@ -97,7 +97,7 @@ from sklearn import tree
 def arbreDecision(tirage):
     model = tree.DecisionTreeClassifier()
     model = model.fit(X_train, y_train)
-    prediction = model.predict(X_test)
+    prediction = model.predict(tirage)
     return prediction
 
 
@@ -107,7 +107,7 @@ def randomTree(tirage):
     model = RandomForestClassifier(n_estimators= 10)
     model = model.fit(X_train, y_train)
 
-    prediction = model.predict(X_test)
+    prediction = model.predict(tirage)
     return prediction
 
 pred1 = naiveBaye(tirage)
@@ -132,3 +132,21 @@ print("faux negatif: %d"%fn)
 print("true positif: %d"%tp)
 accu_score = accuracy_score(y_test, y_pred1)
 print("accuracy score : %f"% accu_score)
+
+
+chosen_draw = pd.DataFrame(columns=['N1','N2','N3','N4','N5','E1','E2'])
+chosen_draw = chosen_draw.append({"N1":10,
+                                          "N2":10,
+                                          "N3":10,
+                                          "N4":10,
+                                          "N5":10,
+                                          "E1":10,
+                                          "E2":10,},ignore_index=True)
+from sklearn.ensemble import RandomForestClassifier
+def randomTree2(tirage):
+    model = RandomForestClassifier(n_estimators= 10)
+    model = model.fit(X_train, y_train)
+
+    prediction = model.predict_proba(tirage)
+    return prediction
+print(randomTree2(chosen_draw))
